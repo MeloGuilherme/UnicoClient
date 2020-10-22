@@ -2,7 +2,6 @@ package br.com.unitins.unico.controller;
 
 import br.com.unitins.unico.application.Util;
 import br.com.unitins.unico.model.Curso;
-import br.com.unitins.unico.model.Endereco;
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -13,7 +12,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,8 +28,6 @@ public class CursoController implements Serializable {
     private static final long serialVersionUID = 2127281323462631207L;
 
     private Curso curso;
-
-    private Integer id;
 
     private static final String URL_PRINCIPAL = "https://unicoapi-es.herokuapp.com/api/v1/cursos/";
     private static final String CHARSET_UTF8 = ";charset=utf-8";
