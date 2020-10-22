@@ -17,6 +17,8 @@ import javax.inject.Named;
 @ViewScoped
 public class EnderecoController implements Serializable {
 
+    // Testando requisição na API de CEP dos Correios
+
     private static final long serialVersionUID = -4170983865804153695L;
 
     private static final String WS_CEP = "https://viacep.com.br/ws/";
@@ -24,8 +26,6 @@ public class EnderecoController implements Serializable {
     public String buscarEnderecoPorCep(String cep) {
 
         String url = WS_CEP + cep + "/json";
-
-
 
         try {
 

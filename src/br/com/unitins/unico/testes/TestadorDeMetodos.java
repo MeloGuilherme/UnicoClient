@@ -30,9 +30,10 @@ public class TestadorDeMetodos {
         Curso c = new Curso();
 
         c.setTitulo("Teste titulo");
-        c.setUrl("Teste url");
+        c.setUrl("https://www.globo.com/");
+        c.setDescricao("Descricao");
         c.setAtivo(true);
+        c.setId_modulo(1);
 
-        cc.cadastrarCurso2(c);
     }
 }

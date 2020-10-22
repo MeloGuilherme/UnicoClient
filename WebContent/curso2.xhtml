@@ -23,23 +23,81 @@
 
         <div class="container">
 
-            <h1> Projeto de Consumo do UnicoAPI </h1>
+            <h1> Cadastro </h1>
 
-            <br />
-            <br />
+            <br/>
+            <br/>
 
             <div class="form-group">
 
-                <h:outputLabel for="id_curso" value="ID do Curso: " />
-                <h:inputText id="id_curso" class="form-control"
-                             placeholder="Digite o ID do Curso para pesquisar"
-                             value="#{cursoController.id}" />
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+
+                        <h:outputLabel for="titulo_curso" value="Título: "/>
+                        <h:inputText id="titulo_curso" class="form-control"
+                                     placeholder="Digite o ID do Curso para pesquisar"
+                                     value="#{cursoController.curso.titulo}"/>
+                    </div>
+                    <div class="form-group col-md-6">
+
+
+                        <h:outputLabel for="url_curso" value="URL: "/>
+                        <h:inputText id="url_curso" class="form-control"
+                                     placeholder="Digite o ID do Curso para pesquisar"
+                                     value="#{cursoController.curso.url}"/>
+                    </div>
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+
+                        <h:outputLabel for="descricao_curso" value="Descrição: "/>
+                        <h:inputTextarea id="descricao_curso" class="form-control"
+                                         placeholder="Digite o ID do Curso para pesquisar"
+                                         value="#{cursoController.curso.descricao}"/>
+                    </div>
+
+                    <div class="form-group col-md-6">
+
+                        <h:outputLabel for="selectAtivo" value="Estado Curso: "/>
+                        <h:selectOneMenu value="#{cursoController.curso.ativo}"
+                                         id="selectAtivo" class="form-control">
+                            <f:selectItem itemLabel="ATIVADO"
+                                          itemValue="true"/>
+                            <f:selectItem itemLabel="DESATIVADO"
+                                          itemValue="false"/>
+                        </h:selectOneMenu>
+
+                    </div>
+
+                </div>
 
             </div>
 
-            <h:commandButton actionListener="#{cursoController.buscar(cursoController.id)}" value="Enviar Request"
-                             class="btn btn-outline-success"/>
+            <div class="row-fluid">
+
+                <h:commandButton actionListener="#{cursoController.cadastrarCurso}" value="Cadastrar"
+                                 class="btn btn-outline-success">
+                </h:commandButton>
+
+                <h:commandButton actionListener="#{cursoController.limpar}" value="Limpar"
+                                 class="btn btn-outline-secondary">
+                    <f:ajax execute="@this" render="@all"/>
+                </h:commandButton>
+
+            </div>
+
+            <br/>
+            <hr/>
+
+            <h:button value="Voltar"
+                      onclick="window.history.go(-1); return false;"
+                      class="btn btn-outline-dark"/>
+
         </div>
+
 
     </h:form>
 

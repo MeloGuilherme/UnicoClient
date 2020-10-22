@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
+    <meta charset="utf-8"/>
     <title>Projeto UNICO</title>
 </h:head>
 
@@ -12,23 +13,31 @@
 
     <h1> Projeto de Consumo do UnicoAPI </h1>
 
-    <h:form>
+    <h:form id="formPrincipal">
 
         <div class="p-field">
 
-            <p:outputLabel>
-                <i class="pi pi-user-plus"></i>&#160;
-                <h:outputText value="ID do Curso:" />
-            </p:outputLabel>
-
+            <p:outputLabel value="ID do Curso:"/> &#160;
             <p:inputText id="nome" required="true"
-                         value="#{cursoController.id}" />
+                         value="#{cursoController.curso.id}"/>
+
         </div>
 
-        <br />
-        <br />
+        <br/><br/>
 
-        <p:commandButton actionListener="#{cursoController.buscar(cursoController.id)}" value="Enviar Request"/>
+        <p:commandButton actionListener="#{cursoController.buscarPorId(cursoController.curso.id)}" value="Buscar"/>
+        <p:commandButton actionListener="#{cursoController.limpar}" value="Limpar" update="formPrincipal"/>
+
+        <br/><br/>
+
+        <h3>*Resultado disponível no console*</h3>
+
+        <br/>
+        <hr/>
+
+        <p:commandButton value="Voltar"
+                         onclick="window.history.go(-1); return false;"
+                         class="btn btn-outline-dark"/>
 
     </h:form>
 

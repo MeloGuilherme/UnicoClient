@@ -16,4 +16,19 @@ public class Util {
 
         return jsonEmString;
     }
+
+    public static StringBuilder jsonBuffer(BufferedReader bufferedReader) throws IOException {
+
+        var builder = new StringBuilder();
+
+        String line;
+
+        while ((line = bufferedReader.readLine()) != null) {
+
+            builder.append(line);
+            builder.append(System.lineSeparator());
+        }
+
+        return builder;
+    }
 }

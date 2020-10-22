@@ -1,20 +1,23 @@
 package br.com.unitins.unico.controller;
 
+import br.com.unitins.unico.application.Util;
 import br.com.unitins.unico.model.Curso;
+import br.com.unitins.unico.model.Endereco;
 import com.google.gson.Gson;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.primefaces.shaded.json.JSONObject;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import java.io.*;
+import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
@@ -30,9 +33,18 @@ public class CursoController implements Serializable {
 
     private Integer id;
 
-    public void buscar(Integer id) {
+    private static final String URL_PRINCIPAL = "https://unicoapi-es.herokuapp.com/api/v1/cursos/";
+    private static final String CHARSET_UTF8 = ";charset=utf-8";
 
-        String url = "https://unicoapi-es.herokuapp.com/api/v1/cursos/" + id;
+    @PostConstruct
+    public void init() {
+
+        setCurso(new Curso());
+    }
+
+    public void buscarPorId(Integer id) {
+
+        String url = URL_PRINCIPAL + id;
 
         try {
 
@@ -46,109 +58,51 @@ public class CursoController implements Serializable {
 
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-            String output = "";
-            String line;
+            System.out.println(Util.converterJsonEmString(br));
+        }
 
-            while ((line = br.readLine()) != null) {
-
-                output += line;
-            }
-
-            conn.disconnect();
-
-            Gson gson = new Gson();
-
-            setCurso(gson.fromJson(new String(output.getBytes()), Curso.class));
-
-            System.out.println("\nURL da API (Requisição via GET): " + url + "\n");
-
-            System.out.println("ID: " + getCurso().getId());
-            System.out.println("URL: " + getCurso().getUrl());
-            System.out.println("TITULO: " + getCurso().getTitulo());
-            System.out.println("ATIVO: " + getCurso().getAtivo() + "\n");
-        } catch (IOException e) {
-
-            e.printStackTrace();
+        catch (IOException e) {
 
             Logger.getLogger(CursoController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
-    public Boolean cadastrarCurso(Curso curso) throws IOException {
+    public void cadastrarCurso() {
 
-        try {
+        Gson gson = new Gson();
 
-            String url = "http://localhost:8000/api/v1/cursos/";
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
-            Gson gson = new Gson();
-            HttpClient hp = HttpClientBuilder.create().build();
-            HttpPost post = new HttpPost(url);
-            StringEntity postString = new StringEntity(gson.toJson(curso));
+            var request = new HttpPost(URL_PRINCIPAL);
+            request.setHeader("Content-type", "application/json" + CHARSET_UTF8);
+            request.setHeader("Authorization", "Token e15c3ef620ad56bc08d64193c411409bdcd9d8c7");
+            request.setEntity(new StringEntity(gson.toJson(getCurso())));
 
-            post.setEntity(postString);
-            post.setHeader("Content-type", "application/json");
+            HttpResponse response = client.execute(request);
 
-            HttpResponse response = hp.execute(post);
+            var br = new BufferedReader(new InputStreamReader(
+                    response.getEntity().getContent()));
 
-            return true;
+            System.out.println(Util.jsonBuffer(br));
         }
 
-        catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
+        catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public Boolean cadastrarCurso2(Curso curso) throws IOException {
+    public void limpar() {
 
-        JSONObject json = new JSONObject();
-
-        json.put("titulo", curso.getTitulo());
-        json.put("url", curso.getUrl());
-        json.put("ativo", curso.getAtivo());
-
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-
-        try {
-
-            HttpPost request = new HttpPost("http://localhost:8000/api/v1/cursos/");
-            StringEntity params = new StringEntity(json.toString());
-            request.addHeader("content-type", "application/json");
-            request.setEntity(params);
-            httpClient.execute(request);
-
-            return true;
-        }
-
-        catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-
-        finally {
-
-            httpClient.close();
-        }
+        setCurso(null);
+        init();
     }
 
     public Curso getCurso() {
-
-        if (curso == null)
-            curso = new Curso();
-
         return curso;
     }
 
     public void setCurso(Curso curso) {
         this.curso = curso;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }
